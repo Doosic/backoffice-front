@@ -1,0 +1,117 @@
+{
+  "success": true,
+  "statusCode": 100,
+  "message": "ok",
+  "data": [
+    {
+      "contentId": 1,
+      "categoryId": 1,
+      "title": "사전처럼 바로 찾아쓰는 jQuery",
+      "text": "<h2>내용은 별거 없습니다만.</h2><br/><p>그래도 작성은 해보았습니다.</p>",
+      "createDate": "2024/04/09",
+      "userInfo": {
+        "userId": 1,
+        "username": "왕감자"
+      }
+    },
+    {
+      "contentId": 2,
+      "categoryId": 2,
+      "title": "이것은 무엇인가요.",
+      "text": "<h2>내용은 별거 없습니다만.</h2><br/><p>그래도 작성은 해보았습니다.</p>",
+      "createDate": "2024/04/09",
+      "userInfo": {
+        "userId": 2,
+        "username": "왕감자"
+      }
+    },
+    {
+      "contentId": 3,
+      "categoryId": 3,
+      "title": "플레이스테이션5 티안나게 고장내는법",
+      "text": "<h2>내용은 별거 없습니다만.</h2><br/><p>그래도 작성은 해보았습니다.</p>",
+      "createDate": "2024/04/09",
+      "userInfo": {
+        "userId": 3,
+        "username": "왕감자"
+      }
+    },
+    {
+      "contentId": 4,
+      "categoryId": 4,
+      "title": "경주 왔는데 경주월드 앞에 거대한 탑 뭔가요",
+      "text": "<h2>내용은 별거 없습니다만.</h2><br/><p>그래도 작성은 해보았습니다.</p>",
+      "createDate": "2024/04/09",
+      "userInfo": {
+        "userId": 4,
+        "username": "왕감자"
+      }
+    },
+    {
+      "contentId": 5,
+      "categoryId": 5,
+      "title": "유모차 디럭스 vs 절충형",
+      "text": "<h2>내용은 별거 없습니다만.</h2><br/><p>그래도 작성은 해보았습니다.</p>",
+      "createDate": "2024/04/09",
+      "userInfo": {
+        "userId": 5,
+        "username": "왕감자"
+      }
+    },
+    {
+      "contentId": 6,
+      "categoryId": 6,
+      "title": "나 왜 연애 못하지",
+      "text": "<h2>내용은 별거 없습니다만.</h2><br/><p>그래도 작성은 해보았습니다.</p>",
+      "createDate": "2024/04/09",
+      "userInfo": {
+        "userId": 6,
+        "username": "왕감자"
+      }
+    },
+    {
+      "contentId": 7,
+      "categoryId": 7,
+      "title": "가전은 LG라고 하잖아...",
+      "text": "<h2>내용은 별거 없습니다만.</h2><br/><p>그래도 작성은 해보았습니다.</p>",
+      "createDate": "2024/04/09",
+      "userInfo": {
+        "userId": 7,
+        "username": "왕감자"
+      }
+    },
+    {
+      "contentId": 8,
+      "categoryId": 8,
+      "title": "가볍게 혼자 다녀올만한 곳",
+      "text": "<h2>내용은 별거 없습니다만.</h2><br/><p>그래도 작성은 해보았습니다.</p>",
+      "createDate": "2024/04/09",
+      "userInfo": {
+        "userId": 8,
+        "username": "왕감자"
+      }
+    },
+    {
+      "contentId": 9,
+      "categoryId": 9,
+      "title": "석촌호수 다녀왔다!",
+      "text": "<h2>내용은 별거 없습니다만.</h2><br/><p>그래도 작성은 해보았습니다.</p>",
+      "createDate": "2024/04/09",
+      "userInfo": {
+        "userId": 9,
+        "username": "왕감자"
+      }
+    },
+    {
+      "contentId": 10,
+      "categoryId": 10,
+      "title": "한강 피크닉",
+      "text": "<h2>내용은 별거 없습니다만.</h2><br/><p>그래도 작성은 해보았습니다.</p>",
+      "createDate": "2024/04/09",
+      "userInfo": {
+        "userId": 10,
+        "username": "왕감자"
+      }
+    }
+  ]
+}

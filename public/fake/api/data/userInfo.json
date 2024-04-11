@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "statusCode": 100,
+  "message": "ok",
+  "data": {
+    "userId": 1,
+    "username": "강원도 감자"
+  }
+}
