@@ -18,9 +18,9 @@ const menuList = ref([
     items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/', query:{} }]
   },
   {
-    label: 'Contents',
+    label: 'ADMIN',
     items: [
-      { label: 'ContentList', icon: 'pi pi-fw pi-id-card', to: '/content/list', query: {search: '', page: 1, rows: 10}},
+      { label: 'AdminList', icon: 'pi pi-fw pi-id-card', to: '/admin/list', query: {search: '', page: 1, rows: 10}},
     ]
   },
   {

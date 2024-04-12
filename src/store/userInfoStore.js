@@ -5,7 +5,10 @@ export const userInfoStore = defineStore("userInfo", () => {
 
   const isLogin = ref(false);
   const userInfo = ref({
-    username: '',
+    adminId: null,
+    email: '',
+    name: '',
+    status: '',
   })
 
   const getIsLogin = () => {

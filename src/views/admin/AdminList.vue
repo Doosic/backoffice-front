@@ -46,13 +46,13 @@
 <script setup>
 import {ref, onBeforeMount, getCurrentInstance, watch} from "vue";
 import CBreadcrumb from "@/components/CBreadcrumb.vue";
-import { ContentService } from "@/api/content/ContentService.js";
+import { AdminService } from "@/api/admin/AdminService.js";
 import {useRoute} from "vue-router";
 const route = useRoute();
 import router from "@/router/index.js";
 const { proxy } = getCurrentInstance();
-const contentService = new ContentService();
-const contentList = ref([]);
+const adminService = new AdminService();
+const adminList = ref([]);
 const searchText = ref('');
 const first = ref(0);
 
@@ -61,8 +61,8 @@ const cBreadHome = ref({
 });
 
 const cBreadItems = ref([
-  { label: 'Contents' },
-  { label: 'ContentList' }
+  { label: 'Admin' },
+  { label: 'AdminList' }
 ]);
 
 const pagingInfo = ref({
@@ -85,11 +85,11 @@ const getContents = () => {
   params.pageNum = route.query.page != undefined ? route.query.page : pagingInfo.value.page;
   params.pageRowCount = route.query.rows != undefined ? route.query.rows : pagingInfo.value.rows;
 
-  contentService.getContents(params).then((res) => {
+  adminService.getAdmins(params).then((res) => {
     if(!res.success){
       return;
     }
-    contentList.value = res.data.itemList;
+    adminList.value = res.data.itemList;
 
     first.value = (params.pageNum-1) * 10;
     pagingInfo.value.page = params.pageNum;

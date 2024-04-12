@@ -2,7 +2,7 @@
   <div class="layout-topbar">
     <router-link to="/" class="layout-topbar-logo">
       <i class="pi pi-linkedin" alt="logo"></i>
-      <span class="ml-2">Todo List</span>
+      <span class="ml-2">Back-Office</span>
     </router-link>
 
     <button class="p-link layout-menu-button layout-topbar-button" @click="onMenuToggle()">
@@ -20,11 +20,11 @@
       </button>
 
       <button v-if="proxy.$userInfo.getIsLogin()" class="p-link layout-topbar-button">
-        <i class="pi pi-sign-in"></i>
+        <i class="pi pi-user"></i>
         <span>Profile</span>
       </button>
       <button v-else class="p-link layout-topbar-button" @click="goLoginPage()">
-        <i class="pi pi-user"></i>
+        <i class="pi pi-sign-in"></i>
         <span>Profile</span>
       </button>
 

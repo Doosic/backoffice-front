@@ -19,10 +19,15 @@ import AppTopbar from "@/layout/AppTopbar.vue";
 import AppSidebar from "@/layout/AppSidebar.vue";
 import AppFooter from "@/layout/AppFooter.vue";
 
-import { computed, watch, ref } from 'vue';
-
+import { computed, watch, ref, getCurrentInstance, onBeforeMount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 const { layoutConfig, layoutState, isSidebarActive } = useLayout();
+
+const userService = new AdminService();
+import { AdminService } from "@/api/admin/AdminService.js";
+
+import router from "@/router/index.js";
+const {proxy} = getCurrentInstance();
 
 const outsideClickListener = ref(null);
 
@@ -33,6 +38,18 @@ watch(isSidebarActive, (newVal) => {
     unbindOutsideClickListener();
   }
 });
+
+onBeforeMount(() => {
+  userService.getUserInfo().then((res) => {
+    if(!res.success){
+      router.push({path: '/login'});
+      return;
+    }
+
+    proxy.$userInfo.setIsLogin(true);
+    proxy.$userInfo.setUserInfo(res.data);
+  })
+})
 
 const containerClass = computed(() => {
   return {

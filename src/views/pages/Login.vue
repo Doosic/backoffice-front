@@ -4,7 +4,7 @@
       <template #content>
 
         <div class="form-container">
-          <h2><i class="pi pi-linkedin"></i> Prime Admin Login</h2>
+          <h2><i class="pi pi-linkedin"></i> Back-Office Login</h2>
 
           <br/>
 
@@ -12,7 +12,7 @@
             <InputGroupAddon>
               <i class="pi pi-user"></i>
             </InputGroupAddon>
-            <InputText type="text" placeholder="Username" v-model.trim="username" />
+            <InputText type="text" placeholder="Username" v-model.trim="email" />
           </InputGroup>
 
           <br/>
@@ -56,22 +56,43 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {ref, getCurrentInstance} from "vue";
+import { LoginService } from "@/api/login/LoginService.js";
+const {proxy} = getCurrentInstance();
+import router from "@/router/index.js";
 
 import { useToast } from "primevue/usetoast";
 const toast = useToast();
 
-const username = ref('');
+const loginService = new LoginService();
+
+const email = ref('');
 const password = ref('');
 
 const isLogin = () => {
-  if(!validation()){
-    return;
+  // if(!validation()){
+  //   return;
+  // }
+
+  const sendData = {
+    email : email.value,
+    password : password.value,
   }
+
+  loginService.isLogin(sendData).then((res) => {
+    if(!res.success){
+      showBottomErrorRight("로그인에 실패하였습니다.");
+      return;
+    }
+
+    proxy.$userInfo.setUserInfo(res.data);
+    proxy.$userInfo.setIsLogin(true);
+    router.push({path: '/'});
+  })
 }
 
 const validation = () => {
-  if(username.value == ''){
+  if(email.value == ''){
     showBottomWarnRight('username을 입력해주세요');
     return false;
   }
@@ -92,6 +113,9 @@ const validation = () => {
 
 const showBottomWarnRight = (detailMsg) => {
   toast.add({ severity: 'warn', summary: 'Warn Message', detail: detailMsg, group: 'br', life: 3000 });
+};
+const showBottomErrorRight = (detailMsg) => {
+  toast.add({ severity: 'error', summary: 'Error Message', detail: detailMsg, group: 'br', life: 3000 });
 };
 </script>
 

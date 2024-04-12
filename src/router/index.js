@@ -14,9 +14,9 @@ const router = createRouter({
           component: () => import('@/views/DashBoard.vue')
         },
         {
-          path: '/content/list',
-          name: 'contentList',
-          component: () => import('@/views/content/ContentList.vue')
+          path: '/admin/list',
+          name: 'adminList',
+          component: () => import('@/views/admin/AdminList.vue')
         }
       ]
     },
