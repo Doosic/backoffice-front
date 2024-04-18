@@ -7,8 +7,10 @@ import Password from 'primevue/password';
 import Button from 'primevue/button';
 import Toast from 'primevue/toast';
 import DataTable from "primevue/datatable";
+import Dialog from "primevue/dialog";
 import Column from "primevue/column";
 import Paginator from 'primevue/paginator';
+
 
 export function addComponents(app) {
   app.component('Card', Card);
@@ -18,6 +20,7 @@ export function addComponents(app) {
   app.component('InputText', InputText);
   app.component('Password', Password);
   app.component('Button', Button);
+  app.component('Dialog', Dialog);
   app.component('DataTable', DataTable);
   app.component('Column', Column);
   app.component('Paginator', Paginator );
