@@ -6,6 +6,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      redirect: '/login',
       component: AppLayout,
       children: [
         {
