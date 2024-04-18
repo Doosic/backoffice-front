@@ -10,7 +10,7 @@
 
           <InputGroup>
             <InputGroupAddon>
-              <i class="pi pi-user"></i>
+              <i class="pi pi-envelope"></i>
             </InputGroupAddon>
             <InputText type="text" placeholder="Username" v-model.trim="email" />
           </InputGroup>
@@ -19,7 +19,7 @@
 
           <InputGroup>
             <InputGroupAddon>
-              <i class="pi pi-user"></i>
+              <i class="pi pi-key"></i>
             </InputGroupAddon>
             <Password
                 type="text"
@@ -70,9 +70,9 @@ const email = ref('');
 const password = ref('');
 
 const isLogin = () => {
-  // if(!validation()){
-  //   return;
-  // }
+  if(!validation()){
+    return;
+  }
 
   const sendData = {
     email : email.value,
