@@ -87,6 +87,7 @@
           </Column>
         </DataTable>
       </div>
+
       <div class="card">
         <div class="flex justify-content-between align-items-center mb-5">
           <h5>Best Selling Products</h5>

@@ -8,66 +8,21 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 
 import AppMenuItem from './AppMenuItem.vue';
-
-const menuList = ref([
-  {
-    label: 'Home',
-    items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/', query:{} }]
-  },
-  {
-    label: 'ADMIN',
-    items: [
-      { label: 'AdminList', icon: 'pi pi-fw pi-id-card', to: '/admin/list', query: {search: '', page: 1, rows: 10}},
-    ]
-  },
-  {
-    label: 'Hierarchy',
-    items: [
-      {
-        label: 'Submenu 1',
-        icon: 'pi pi-fw pi-bookmark',
-        items: [
-          {
-            label: 'Submenu 1.1',
-            icon: 'pi pi-fw pi-bookmark',
-            items: [
-              { label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark' },
-              { label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark' },
-              { label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark' }
-            ]
-          },
-          {
-            label: 'Submenu 1.2',
-            icon: 'pi pi-fw pi-bookmark',
-            items: [{ label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark' }]
-          }
-        ]
-      },
-      {
-        label: 'Submenu 2',
-        icon: 'pi pi-fw pi-bookmark',
-        items: [
-          {
-            label: 'Submenu 2.1',
-            icon: 'pi pi-fw pi-bookmark',
-            items: [
-              { label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark' },
-              { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' }
-            ]
-          },
-          {
-            label: 'Submenu 2.2',
-            icon: 'pi pi-fw pi-bookmark',
-            items: [{ label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' }]
-          }
-        ]
-      }
-    ]
-  },
-]);
+import { MenuService } from "@/api/menu/MenuService.js";
+const menuService = new MenuService();
+const menuList = ref([]);
+onBeforeMount(() => {
+  menuList.value = [];
+  menuService.getMenus().then((res) => {
+    if(!res.success){
+      return;
+    }
+    menuList.value = res.data;
+  })
+})
 </script>
 
 <style lang="scss" scoped></style>
