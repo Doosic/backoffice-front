@@ -10,7 +10,8 @@ import DataTable from "primevue/datatable";
 import Dialog from "primevue/dialog";
 import Column from "primevue/column";
 import Paginator from 'primevue/paginator';
-
+import Tag from "primevue/tag";
+import Tree from "primevue/tree";
 
 export function addComponents(app) {
   app.component('Card', Card);
@@ -23,6 +24,8 @@ export function addComponents(app) {
   app.component('Dialog', Dialog);
   app.component('DataTable', DataTable);
   app.component('Column', Column);
+  app.component('Tag', Tag);
   app.component('Paginator', Paginator );
   app.component('Toast', Toast);
+  app.component('Tree', Tree);
 }

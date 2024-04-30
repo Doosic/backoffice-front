@@ -9,14 +9,19 @@
               :value="authList"
               :paginator="false"
               :rows="10"
-              data-key="contentId"
               stripedRows
+              data-key="authId"
               selectionMode="single"
+              v-model:selection="selectedAuthItem"
+              @row-select="selectedAuth"
           >
             <template #header>
               <div class="flex justify-content-between align-items-baseline">
-                <Button class="mr-2 col-3" style="height: 33px;" type="button" icon="pi pi-user-plus" label="Menu create" outlined />
-                <Button class="col-3" style="height: 33px;" type="button" icon="pi pi-user-plus" label="Auth create" outlined />
+                <InputGroup class="col-8">
+                  <Button class="mr-2 col-4" style="height: 33px;" type="button" icon="pi pi-user-plus" label="Menu create" outlined />
+                  <Button class="col-4" style="height: 33px;" type="button" icon="pi pi-user-plus" label="Function create" outlined />
+                </InputGroup>
+
                 <InputGroup class="col-4">
                   <InputGroupAddon>
                     <i class="pi pi-search cursor-pointer" />
@@ -27,18 +32,22 @@
             </template>
             <template #empty> No contents found. </template>
 
-            <Column field="email" style="min-width: 3rem"></Column>
-            <Column field="name" style="min-width: 3rem" class="cursor-pointer"></Column>
-            <Column field="status" style="min-width: 3rem" class="cursor-pointer"></Column>
-            <Column field="createDate" style="min-width: 3rem"></Column>
+            <Column field="authName" header="name" style="min-width: 3rem"></Column>
+            <Column field="authType" header="type" style="min-width: 3rem" class="cursor-pointer">
+              <template #body="slotProps">
+                <Tag :value="slotProps.data.authType" severity="info"/>
+              </template>
+            </Column>
+            <Column field="regUser.name" header="reguser" style="min-width: 3rem" class="cursor-pointer"></Column>
+            <Column field="createDate" header="create-date" style="min-width: 3rem"></Column>
 
             <template #footer>
-              <Paginator v-model:first="first" :page="3" :page-link-size="5" :rows="5" :total-records="10" :rows-per-page-options="[10, 20, 30]">
+              <Paginator v-model:first="first" :page="3" :page-link-size="5" :rows="pagingInfo.rows" :total-records="pagingInfo.total" :rows-per-page-options="[10, 20, 30]">
                 <template #start>
                   <Button type="button" icon="pi pi-refresh" text />
                 </template>
                 <template #end>
-                  <Button type="button" icon="pi pi-download" text  />
+                  <Button type="button" icon="pi pi-download" text />
                 </template>
               </Paginator>
             </template>
@@ -49,20 +58,75 @@
     </div>
 
     <div class="col-12 xl:col-6">
-      <Card>
-
+      <Card v-if="selectCardItem == 'MENU'">
+        <template #title>
+          <div class="inline-flex align-items-center justify-content-center">
+            <span class="font-bold white-space-nowrap">Menus</span>
+            <Button class="ml-2" label="Preview" rounded @click="changePreview"></Button>
+          </div>
+        </template>
+        <template #content>
+          <Tree v-model:selectionKeys="selectNode" :value="menuList" @node-select="nodeSelect" selection-mode="checkbox" class="w-full md:w-30rem"></Tree>
+        </template>
+        <template #footer>
+          <Button class="ml-2" label="Update" rounded @click="changePreview"></Button>
+        </template>
+      </Card>
+      <Card v-if="selectCardItem == 'FUNC'">
+        <template #title>
+          <div class="inline-flex align-items-center justify-content-center">
+            <span class="font-bold white-space-nowrap">Menus</span>
+            <Button class="ml-2" label="Preview" rounded @click="changePreview"></Button>
+          </div>
+        </template>
+        <template #content>
+          <Tree v-model:selectionKeys="selectNode" :value="menuList" @node-select="nodeSelect" selection-mode="checkbox" class="w-full md:w-30rem"></Tree>
+        </template>
+        <template #footer>
+          <Button class="ml-2" label="Update" rounded @click="changePreview"></Button>
+        </template>
+      </Card>
+      <Card v-if="selectCardItem == 'DEFAULT'">
+        <template #title>
+          <div class="inline-flex align-items-center justify-content-center">
+            <span class="font-bold white-space-nowrap">Preview</span>
+          </div>
+        </template>
+        <template #content>
+          <div style="">Menu</div>
+          <Tree :value="menuList" @node-select="nodeSelect" class="w-full md:w-30rem"></Tree>
+          <div>Function</div>
+          <Tree :value="menuList" @node-select="nodeSelect" class="w-full md:w-30rem"></Tree>
+        </template>
       </Card>
     </div>
   </div>
+
+  <Toast position="bottom-right" group="br" />
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {ref, getCurrentInstance, watch, onBeforeMount} from "vue";
 import CBreadcrumb from "@/components/CBreadcrumb.vue";
+import { AuthService } from "@/api/auth/AuthService.js";
+import { MenuService } from "@/api/menu/MenuService.js";
+import {useRoute} from "vue-router";
+const route = useRoute();
+import router from "@/router/index.js";
+import { useToast } from "primevue/usetoast";
+const toast = useToast();
+const { proxy } = getCurrentInstance();
+const authService = new AuthService();
+const menuService = new MenuService();
 
 const authList = ref([]);
+const menuList = ref([]);
+
 const searchText = ref('');
 const first = ref(0);
+const selectedAuthItem = ref({});
+const selectNode = ref();
+const selectCardItem = ref('DEFAULT');
 
 const cBreadHome = ref({
   icon: 'pi pi-home'
@@ -72,6 +136,103 @@ const cBreadItems = ref([
   { label: 'Admin' },
   { label: 'AuthList' }
 ]);
+
+const pagingInfo = ref({
+  rows : 10,
+  total: 0,
+  page: 1,
+})
+
+watch(() => route.query, (newValue, oldValue) =>  {
+  getAuths();
+})
+watch(() => selectedAuthItem.value, (newValue, oldValue) =>  {
+  if(selectedAuthItem.value == null){
+    changePreview();
+  }
+})
+
+onBeforeMount(() => {
+  getAuths();
+  menuService.getAllMenu().then((res) => {
+    menuList.value = res.data;
+  })
+})
+
+const nodeSelect = () => {
+  console.log(selectNode.value);
+}
+
+const selectedAuth = () => {
+  selectCardItem.value = selectedAuthItem.value.authType;
+
+  let params = {
+    authId: selectedAuthItem.value.authId
+  }
+  menuService.getMenuKeys(params).then((res) => {
+    selectNode.value = {};
+    for(let i = 0; i < res.data.length; i++){
+      selectNode.value[res.data[i].key] = {
+        checked: true,
+        partialChecked: false
+      }
+    }
+  })
+}
+
+const changePreview = () => {
+  selectCardItem.value = 'DEFAULT';
+  selectedAuthItem.value = {};
+}
+
+const getAuths = () => {
+  let params = {}
+  params.text = route.query.search != undefined ? route.query.search : searchText.value;
+  params.pageNum = route.query.page != undefined ? route.query.page : pagingInfo.value.page;
+  params.pageRowCount = route.query.rows != undefined ? route.query.rows : pagingInfo.value.rows;
+
+  authService.getAuths(params).then((res) => {
+    if(!res.success){
+      return;
+    }
+    authList.value = res.data.itemList;
+
+    first.value = (params.pageNum-1) * 10;
+    pagingInfo.value.page = Number(params.pageNum);
+    pagingInfo.value.rows = Number(params.pageRowCount);
+    pagingInfo.value.total = res.data.itemTotalCnt;
+  })
+}
+
+const onRefresh = () => {
+  valueToRouteQuery(setRouterQuery({}));
+}
+
+const onPageClick = (pageInfo) => {
+  valueToRouteQuery(setRouterQuery({
+    page: pageInfo.page + 1,
+    rows: pageInfo.rows,
+    search: pageInfo.search,
+  }));
+}
+
+const clickSearch = () => {
+  valueToRouteQuery(setRouterQuery({
+    search: searchText.value
+  }));
+}
+
+const setRouterQuery = ({search="" ,page=1, rows=10}) => {
+  return {
+    search: proxy.$utils.getDefaultArgumentValue(search, route.query.search),
+    page: proxy.$utils.getDefaultArgumentValue(page, route.query.page),
+    rows: proxy.$utils.getDefaultArgumentValue(rows, route.query.rows),
+  }
+}
+
+const showBottomSuccessRight = (detailMsg) => {
+  toast.add({ severity: 'success', summary: 'Success Message', detail: detailMsg, group: 'br', life: 3000 });
+};
 </script>
 
 <style scoped>

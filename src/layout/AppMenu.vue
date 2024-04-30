@@ -22,8 +22,8 @@ onBeforeMount(() => {
     }
     menuList.value = res.data;
     for(let i = 0; i < menuList.value.length; i++){
-      if(menuList.value[i].items.length > 0){
-        parseJsonRecursively(menuList.value[i].items);
+      if(menuList.value[i].children.length > 0){
+        parseJsonRecursively(menuList.value[i].children);
       }
     }
   })
@@ -36,7 +36,7 @@ const parseJsonRecursively = (items) => {
     }
 
    if(items[i].length > 0){
-     items[i] = parseJsonRecursively(items[i].items);
+     items[i] = parseJsonRecursively(items[i].children);
    }
   }
 }

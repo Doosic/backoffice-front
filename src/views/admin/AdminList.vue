@@ -27,7 +27,7 @@
         <Column field="email" header="email" style="min-width: 3rem"></Column>
         <Column field="name" header="name" style="min-width: 3rem" class="cursor-pointer"></Column>
         <Column field="status" header="status" style="min-width: 3rem" class="cursor-pointer"></Column>
-        <Column field="createDate" header="createDate" style="min-width: 3rem"></Column>
+        <Column field="createDate" header="create-date" style="min-width: 3rem"></Column>
         <Column :exportable="false" style="min-width:8rem">
           <template #body="slotProps">
             <Button @click="updateAdminDialog(slotProps.data)" icon="pi pi-pencil" outlined rounded class="mr-2" :disabled="slotProps.data.status != 'USE'"/>
@@ -95,7 +95,7 @@ const cBreadItems = ref([
 
 const pagingInfo = ref({
   rows : 10,
-  total: 100,
+  total: 10,
   page: 1,
 })
 
