@@ -18,7 +18,7 @@
             <template #header>
               <div class="flex justify-content-between align-items-baseline">
                 <InputGroup class="col-8">
-                  <Button class="mr-2 col-4" style="height: 33px;" type="button" icon="pi pi-user-plus" label="Menu create" outlined />
+                  <Button class="mr-2 col-4" style="height: 33px;" type="button" icon="pi pi-user-plus" label="Menu create" outlined @click="createMenuDialogOpen" />
                   <Button class="col-4" style="height: 33px;" type="button" icon="pi pi-user-plus" label="Function create" outlined />
                 </InputGroup>
 
@@ -69,9 +69,12 @@
           <Tree v-model:selectionKeys="selectNode" :value="menuList" @node-select="nodeSelect" selection-mode="checkbox" class="w-full md:w-30rem"></Tree>
         </template>
         <template #footer>
-          <Button class="ml-2" label="Update" rounded @click="changePreview"></Button>
+          <div class="flex justify-content-end align-items-baseline">
+            <Button class="ml-2" label="Update" rounded @click="updateAuths"></Button>
+          </div>
         </template>
       </Card>
+
       <Card v-if="selectCardItem == 'FUNC'">
         <template #title>
           <div class="inline-flex align-items-center justify-content-center">
@@ -83,9 +86,12 @@
           <Tree v-model:selectionKeys="selectNode" :value="menuList" @node-select="nodeSelect" selection-mode="checkbox" class="w-full md:w-30rem"></Tree>
         </template>
         <template #footer>
-          <Button class="ml-2" label="Update" rounded @click="changePreview"></Button>
+          <div class="flex justify-content-end align-items-baseline">
+            <Button class="ml-2" label="Update" rounded @click="updateAuths"></Button>
+          </div>
         </template>
       </Card>
+
       <Card v-if="selectCardItem == 'DEFAULT'">
         <template #title>
           <div class="inline-flex align-items-center justify-content-center">
@@ -102,18 +108,22 @@
     </div>
   </div>
 
+  <auth-create-dialog v-if="createMenuDialog" v-model:visible="createMenuDialog" :style="{width: '450px'}" :modal="true" class="p-fluid" :create-dialog="createMenuDialog" @on-create="onCreateMenuSuccess" @on-close="onCreateMenuClose"></auth-create-dialog>
+
   <Toast position="bottom-right" group="br" />
 </template>
 
 <script setup>
 import {ref, getCurrentInstance, watch, onBeforeMount} from "vue";
 import CBreadcrumb from "@/components/CBreadcrumb.vue";
+import AuthCreateDialog from "@/views/auth/component/AuthMenuCreateDialog.vue";
 import { AuthService } from "@/api/auth/AuthService.js";
 import { MenuService } from "@/api/menu/MenuService.js";
 import {useRoute} from "vue-router";
 const route = useRoute();
 import router from "@/router/index.js";
 import { useToast } from "primevue/usetoast";
+import AdminCreateDialog from "@/views/admin/component/AdminCreateDialog.vue";
 const toast = useToast();
 const { proxy } = getCurrentInstance();
 const authService = new AuthService();
@@ -122,6 +132,7 @@ const menuService = new MenuService();
 const authList = ref([]);
 const menuList = ref([]);
 
+const createMenuDialog = ref(false);
 const searchText = ref('');
 const first = ref(0);
 const selectedAuthItem = ref({});
@@ -185,6 +196,10 @@ const changePreview = () => {
   selectedAuthItem.value = {};
 }
 
+const updateAuths = () => {
+  showBottomSuccessRight('업데이트가 완료되었습니다.');
+}
+
 const getAuths = () => {
   let params = {}
   params.text = route.query.search != undefined ? route.query.search : searchText.value;
@@ -228,6 +243,20 @@ const setRouterQuery = ({search="" ,page=1, rows=10}) => {
     page: proxy.$utils.getDefaultArgumentValue(page, route.query.page),
     rows: proxy.$utils.getDefaultArgumentValue(rows, route.query.rows),
   }
+}
+
+const createMenuDialogOpen = () => {
+  createMenuDialog.value = true;
+}
+
+const onCreateMenuSuccess = () => {
+  createMenuDialog.value = false;
+  showBottomSuccessRight("auth 생성 완료되었습니다.");
+  getAuths();
+}
+
+const onCreateMenuClose = () => {
+  createMenuDialog.value = false;
 }
 
 const showBottomSuccessRight = (detailMsg) => {

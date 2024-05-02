@@ -16,4 +16,22 @@ export class AuthService {
         .then((res) => res.json())
         .then((d) => d);
   }
+
+  createAuthAndMenu(dataToSend) {
+    const url = `http://localhost:30871/backoffice/bs/auth-menu`
+
+    const requestOptions = {
+      credentials: 'include',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+      },
+      body: JSON.stringify(dataToSend)
+    };
+
+    return fetch(url, requestOptions)
+        .then((res) => res.json())
+        .then((d) => d);
+  }
 }
