@@ -66,6 +66,13 @@
           </div>
         </template>
         <template #content>
+          <InputGroup>
+            <InputGroupAddon>
+              <i class="pi pi-pencil"></i>
+            </InputGroupAddon>
+            <InputText type="text" placeholder="MenuAuthName" v-model.trim="updateMenuAuthName" readonly/>
+          </InputGroup>
+
           <Tree v-model:selectionKeys="selectNode" :value="menuList" @node-select="nodeSelect" selection-mode="checkbox" class="w-full md:w-30rem"></Tree>
         </template>
         <template #footer>
@@ -138,6 +145,7 @@ const first = ref(0);
 const selectedAuthItem = ref({});
 const selectNode = ref();
 const selectCardItem = ref('DEFAULT');
+const updateMenuAuthName = ref('');
 
 const cBreadHome = ref({
   icon: 'pi pi-home'
@@ -176,10 +184,12 @@ const nodeSelect = () => {
 
 const selectedAuth = () => {
   selectCardItem.value = selectedAuthItem.value.authType;
+  updateMenuAuthName.value = selectedAuthItem.value.authName;
 
   let params = {
     authId: selectedAuthItem.value.authId
   }
+
   menuService.getMenuKeys(params).then((res) => {
     selectNode.value = {};
     for(let i = 0; i < res.data.length; i++){
@@ -197,7 +207,34 @@ const changePreview = () => {
 }
 
 const updateAuths = () => {
-  showBottomSuccessRight('업데이트가 완료되었습니다.');
+  if(!updateValidation()){
+    return;
+  }
+
+  const sendData = {
+    authId: selectedAuthItem.value.authId,
+    menuKeys: Object.keys(selectNode.value)
+  }
+
+  authService.updateAuthAndMenu(sendData).then((res) => {
+    console.log(res);
+    if(!res.success){
+      if(res.statusCode == 812){
+        showBottomWarnRight('name이 중복되었습니다.');
+      }
+      return;
+    }
+    showBottomSuccessRight('업데이트가 완료되었습니다.');
+  })
+}
+
+const updateValidation = () => {
+  if(Object.keys(selectNode.value).length == 0){
+    showBottomWarnRight('menu를 선택해주세요');
+    return false;
+  }
+
+  return true;
 }
 
 const getAuths = () => {
@@ -261,6 +298,9 @@ const onCreateMenuClose = () => {
 
 const showBottomSuccessRight = (detailMsg) => {
   toast.add({ severity: 'success', summary: 'Success Message', detail: detailMsg, group: 'br', life: 3000 });
+};
+const showBottomWarnRight = (detailMsg) => {
+  toast.add({ severity: 'warn', summary: 'Warn Message', detail: detailMsg, group: 'br', life: 3000 });
 };
 </script>
 
