@@ -35,7 +35,8 @@
             <Column field="authName" header="name" style="min-width: 3rem"></Column>
             <Column field="authType" header="type" style="min-width: 3rem" class="cursor-pointer">
               <template #body="slotProps">
-                <Tag :value="slotProps.data.authType" severity="info"/>
+                <Tag v-if="slotProps.data.authType == 'MENU'" :value="slotProps.data.authType" severity="info"/>
+                <Tag v-else :value="slotProps.data.authType" severity="warning"/>
               </template>
             </Column>
             <Column field="regUser.name" header="reguser" style="min-width: 3rem" class="cursor-pointer"></Column>
@@ -85,12 +86,19 @@
       <Card v-if="selectCardItem == 'FUNC'">
         <template #title>
           <div class="inline-flex align-items-center justify-content-center">
-            <span class="font-bold white-space-nowrap">Menus</span>
+            <span class="font-bold white-space-nowrap">Funcs</span>
             <Button class="ml-2" label="Preview" rounded @click="changePreview"></Button>
           </div>
         </template>
         <template #content>
-          <Tree v-model:selectionKeys="selectNode" :value="menuList" @node-select="nodeSelect" selection-mode="checkbox" class="w-full md:w-30rem"></Tree>
+          <InputGroup>
+            <InputGroupAddon>
+              <i class="pi pi-pencil"></i>
+            </InputGroupAddon>
+            <InputText type="text" placeholder="MenuAuthName" v-model.trim="updateMenuAuthName" readonly/>
+          </InputGroup>
+
+          <Tree v-model:selectionKeys="selectNode" :value="funcList" @node-select="nodeSelect" selection-mode="checkbox" class="w-full md:w-30rem"></Tree>
         </template>
         <template #footer>
           <div class="flex justify-content-end align-items-baseline">
@@ -109,7 +117,7 @@
           <div style="">Menu</div>
           <Tree :value="menuList" @node-select="nodeSelect" class="w-full md:w-30rem"></Tree>
           <div>Function</div>
-          <Tree :value="menuList" @node-select="nodeSelect" class="w-full md:w-30rem"></Tree>
+          <Tree :value="funcList" @node-select="nodeSelect" class="w-full md:w-30rem"></Tree>
         </template>
       </Card>
     </div>
@@ -126,6 +134,7 @@ import CBreadcrumb from "@/components/CBreadcrumb.vue";
 import AuthCreateDialog from "@/views/auth/component/AuthMenuCreateDialog.vue";
 import { AuthService } from "@/api/auth/AuthService.js";
 import { MenuService } from "@/api/menu/MenuService.js";
+import { FuncService } from "@/api/func/FuncService.js";
 import {useRoute} from "vue-router";
 const route = useRoute();
 import router from "@/router/index.js";
@@ -135,9 +144,11 @@ const toast = useToast();
 const { proxy } = getCurrentInstance();
 const authService = new AuthService();
 const menuService = new MenuService();
+const funcService = new FuncService();
 
 const authList = ref([]);
 const menuList = ref([]);
+const funcList = ref([]);
 
 const createMenuDialog = ref(false);
 const searchText = ref('');
@@ -173,8 +184,9 @@ watch(() => selectedAuthItem.value, (newValue, oldValue) =>  {
 
 onBeforeMount(() => {
   getAuths();
-  menuService.getAllMenu().then((res) => {
-    menuList.value = res.data;
+  menuService.getAllFuncAndMenu().then((res) => {
+    menuList.value = res.data.menuList;
+    funcList.value = res.data.funcList;
   })
 })
 
@@ -186,11 +198,35 @@ const selectedAuth = () => {
   selectCardItem.value = selectedAuthItem.value.authType;
   updateMenuAuthName.value = selectedAuthItem.value.authName;
 
+  if(selectedAuthItem.value.authType == 'MENU'){
+    selectMenuKeys(selectedAuthItem.value.authId);
+  }else if(selectedAuthItem.value.authType == 'FUNC'){
+    selectFuncKeys(selectedAuthItem.value.authId);
+  }
+}
+
+const selectMenuKeys = (authId) => {
   let params = {
-    authId: selectedAuthItem.value.authId
+    menuId: authId
   }
 
   menuService.getMenuKeys(params).then((res) => {
+    selectNode.value = {};
+    for(let i = 0; i < res.data.length; i++){
+      selectNode.value[res.data[i].key] = {
+        checked: true,
+        partialChecked: false
+      }
+    }
+  })
+}
+
+const selectFuncKeys = (authId) => {
+  let params = {
+    funcId: authId
+  }
+
+  funcService.getFuncKeys(params).then((res) => {
     selectNode.value = {};
     for(let i = 0; i < res.data.length; i++){
       selectNode.value[res.data[i].key] = {
@@ -212,7 +248,7 @@ const updateAuths = () => {
   }
 
   const sendData = {
-    authId: selectedAuthItem.value.authId,
+    menuId: selectedAuthItem.value.menuId,
     menuKeys: Object.keys(selectNode.value)
   }
 

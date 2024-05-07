@@ -52,4 +52,21 @@ export class MenuService {
         .then((res) => res.json())
         .then((d) => d);
   }
+
+  getAllFuncAndMenu() {
+    const url = `http://localhost:30871/backoffice/bs/all-func-menu`
+
+    const requestOptions = {
+      credentials: 'include',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+      },
+    };
+
+    return fetch(url, requestOptions)
+        .then((res) => res.json())
+        .then((d) => d);
+  }
 }
