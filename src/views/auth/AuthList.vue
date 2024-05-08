@@ -78,7 +78,7 @@
         </template>
         <template #footer>
           <div class="flex justify-content-end align-items-baseline">
-            <Button class="ml-2" label="Update" rounded @click="updateAuths"></Button>
+            <Button class="ml-2" label="Update" rounded @click="updateAuthMenus"></Button>
           </div>
         </template>
       </Card>
@@ -102,7 +102,7 @@
         </template>
         <template #footer>
           <div class="flex justify-content-end align-items-baseline">
-            <Button class="ml-2" label="Update" rounded @click="updateAuths"></Button>
+            <Button class="ml-2" label="Update" rounded @click="updateAuthFuncs"></Button>
           </div>
         </template>
       </Card>
@@ -244,18 +244,39 @@ const changePreview = () => {
   selectedAuthItem.value = {};
 }
 
-const updateAuths = () => {
+const updateAuthMenus = () => {
   if(!updateValidation()){
     return;
   }
 
   const sendData = {
-    menuId: selectedAuthItem.value.menuId,
+    authId: selectedAuthItem.value.authId,
     menuKeys: Object.keys(selectNode.value)
   }
 
   authService.updateAuthAndMenu(sendData).then((res) => {
-    console.log(res);
+
+    if(!res.success){
+      if(res.statusCode == 812){
+        showBottomWarnRight('name이 중복되었습니다.');
+      }
+      return;
+    }
+    showBottomSuccessRight('업데이트가 완료되었습니다.');
+  })
+}
+
+const updateAuthFuncs = () => {
+  if(!updateValidation()){
+    return;
+  }
+
+  const sendData = {
+    authId: selectedAuthItem.value.authId,
+    funcKeys: Object.keys(selectNode.value)
+  }
+
+  authService.updateAuthAndFunc(sendData).then((res) => {
     if(!res.success){
       if(res.statusCode == 812){
         showBottomWarnRight('name이 중복되었습니다.');

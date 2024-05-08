@@ -70,4 +70,22 @@ export class AuthService {
         .then((res) => res.json())
         .then((d) => d);
   }
+
+  updateAuthAndFunc(dataToSend) {
+    const url = `http://localhost:30871/backoffice/bs/auth-func`
+
+    const requestOptions = {
+      credentials: 'include',
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+      },
+      body: JSON.stringify(dataToSend)
+    };
+
+    return fetch(url, requestOptions)
+        .then((res) => res.json())
+        .then((d) => d);
+  }
 }
