@@ -43,7 +43,15 @@ const unlockAdmin = () => {
 
   adminService.unlockAdmin(sendData).then((res) => {
     if(!res.success){
-      showBottomErrorRight("admin 잠금해제에 실패하였습니다.");
+      let message = '';
+      switch (res.message) {
+        case 'unauthorized error':
+          message = '잠금해제 권한이없습니다.';
+          break;
+        default:
+          message = 'admin 잠금해제 실패하였습니다.';
+      }
+      showBottomErrorRight(message);
       return;
     }
 

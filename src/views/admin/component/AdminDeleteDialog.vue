@@ -43,7 +43,15 @@ const deleteAdmin = () => {
 
   adminService.deleteAdmin(sendData).then((res) => {
     if(!res.success){
-      showBottomErrorRight("admin 삭제에 실패하였습니다.");
+      let message = '';
+      switch (res.message) {
+        case 'unauthorized error':
+          message = '삭제 권한이없습니다.';
+          break;
+        default:
+          message = 'admin 삭제에 실패하였습니다.';
+      }
+      showBottomErrorRight(message);
       return;
     }
 

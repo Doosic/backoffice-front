@@ -78,7 +78,15 @@ const updateAdmin = () => {
 
   adminService.updateAdmin(sendData).then((res) => {
     if(!res.success){
-      showBottomErrorRight("admin 정보변경에 실패하였습니다.");
+      let message = '';
+      switch (res.message) {
+        case 'unauthorized error':
+          message = '정보변경 권한이없습니다.';
+          break;
+        default:
+          message = 'admin 정보변경에 실패하였습니다.';
+      }
+      showBottomErrorRight(message);
       return;
     }
 

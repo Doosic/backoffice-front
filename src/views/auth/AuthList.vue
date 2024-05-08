@@ -255,11 +255,15 @@ const updateAuthMenus = () => {
   }
 
   authService.updateAuthAndMenu(sendData).then((res) => {
-
     if(!res.success){
-      if(res.statusCode == 812){
+      if(res.statusCode == 'duplicated data'){
         showBottomWarnRight('name이 중복되었습니다.');
       }
+      if(res.message == 'unauthorized error'){
+        showBottomErrorRight('생성 권한이 없습니다.');
+        return;
+      }
+      showBottomErrorRight("auth menu 업데이트에 실패하였습니다.");
       return;
     }
     showBottomSuccessRight('업데이트가 완료되었습니다.');
@@ -277,13 +281,24 @@ const updateAuthFuncs = () => {
   }
 
   authService.updateAuthAndFunc(sendData).then((res) => {
+    let message = '업데이트가 완료되었습니다.';
+
     if(!res.success){
-      if(res.statusCode == 812){
-        showBottomWarnRight('name이 중복되었습니다.');
+      switch (res.message) {
+        case 'duplicated data':
+          message = 'name이 중복되었습니다.';
+          break;
+        case 'unauthorized error':
+          message = '생성 권한이없습니다.';
+          break;
+        default:
+          message = 'auth func 업데이트에 실패하였습니다.';
       }
+      showBottomErrorRight(message);
       return;
     }
-    showBottomSuccessRight('업데이트가 완료되었습니다.');
+
+    showBottomSuccessRight(message);
   })
 }
 

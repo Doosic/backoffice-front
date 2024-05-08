@@ -61,8 +61,17 @@ const createFunc = () => {
   }
 
   authService.createAuthAndFunc(sendData).then((res) => {
+
     if(!res.success){
-      showBottomErrorRight("auth func 생성에 실패하였습니다.");
+      let message = '';
+      switch (res.message) {
+        case 'unauthorized error':
+          message = '생성 권한이없습니다.';
+          break;
+        default:
+          message = 'auth func 생성에 실패하였습니다.';
+      }
+      showBottomErrorRight(message);
       return;
     }
 
