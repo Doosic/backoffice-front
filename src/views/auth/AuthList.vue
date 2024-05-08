@@ -19,7 +19,7 @@
               <div class="flex justify-content-between align-items-baseline">
                 <InputGroup class="col-8">
                   <Button class="mr-2 col-4" style="height: 33px;" type="button" icon="pi pi-user-plus" label="Menu create" outlined @click="createMenuDialogOpen" />
-                  <Button class="col-4" style="height: 33px;" type="button" icon="pi pi-user-plus" label="Function create" outlined />
+                  <Button class="col-4" style="height: 33px;" type="button" icon="pi pi-user-plus" label="Function create" outlined @click="createFuncDialogOpen"/>
                 </InputGroup>
 
                 <InputGroup class="col-4">
@@ -124,7 +124,7 @@
   </div>
 
   <auth-create-dialog v-if="createMenuDialog" v-model:visible="createMenuDialog" :style="{width: '450px'}" :modal="true" class="p-fluid" :create-dialog="createMenuDialog" @on-create="onCreateMenuSuccess" @on-close="onCreateMenuClose"></auth-create-dialog>
-
+  <auth-func-create-dialog v-if="createFuncDialog" v-model:visible="createFuncDialog" :style="{width: '450px'}" :modal="true" class="p-fluid" :create-dialog="createFuncDialog" @on-create="onCreateFuncSuccess" @on-close="onCreateFuncClose"></auth-func-create-dialog>
   <Toast position="bottom-right" group="br" />
 </template>
 
@@ -132,6 +132,7 @@
 import {ref, getCurrentInstance, watch, onBeforeMount} from "vue";
 import CBreadcrumb from "@/components/CBreadcrumb.vue";
 import AuthCreateDialog from "@/views/auth/component/AuthMenuCreateDialog.vue";
+import AuthFuncCreateDialog from "@/views/auth/component/AuthFuncCreateDialog.vue";
 import { AuthService } from "@/api/auth/AuthService.js";
 import { MenuService } from "@/api/menu/MenuService.js";
 import { FuncService } from "@/api/func/FuncService.js";
@@ -151,6 +152,7 @@ const menuList = ref([]);
 const funcList = ref([]);
 
 const createMenuDialog = ref(false);
+const createFuncDialog = ref(false);
 const searchText = ref('');
 const first = ref(0);
 const selectedAuthItem = ref({});
@@ -321,9 +323,17 @@ const setRouterQuery = ({search="" ,page=1, rows=10}) => {
 const createMenuDialogOpen = () => {
   createMenuDialog.value = true;
 }
+const createFuncDialogOpen = () => {
+  createFuncDialog.value = true;
+}
 
 const onCreateMenuSuccess = () => {
   createMenuDialog.value = false;
+  showBottomSuccessRight("auth 생성 완료되었습니다.");
+  getAuths();
+}
+const onCreateFuncSuccess = () => {
+  createFuncDialog.value = false;
   showBottomSuccessRight("auth 생성 완료되었습니다.");
   getAuths();
 }
@@ -331,6 +341,10 @@ const onCreateMenuSuccess = () => {
 const onCreateMenuClose = () => {
   createMenuDialog.value = false;
 }
+const onCreateFuncClose = () => {
+  createFuncDialog.value = false;
+}
+
 
 const showBottomSuccessRight = (detailMsg) => {
   toast.add({ severity: 'success', summary: 'Success Message', detail: detailMsg, group: 'br', life: 3000 });
