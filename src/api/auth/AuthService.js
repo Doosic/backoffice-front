@@ -1,7 +1,9 @@
+import baseUrl from "@/api/defaultPath.js";
+
 export class AuthService {
   getAuths(params) {
     const urlParams = new URLSearchParams(params);
-    const url = `http://localhost:30871/backoffice/bs/auths?${urlParams}`
+    const url = `${baseUrl}/backoffice/bs/auths?${urlParams}`
 
     const requestOptions = {
       credentials: 'include',
@@ -18,7 +20,7 @@ export class AuthService {
   }
 
   createAuthAndMenu(dataToSend) {
-    const url = `http://localhost:30871/backoffice/bs/auth-menu`
+    const url = `${baseUrl}/backoffice/bs/auth-menu`
 
     const requestOptions = {
       credentials: 'include',
@@ -36,7 +38,7 @@ export class AuthService {
   }
 
   createAuthAndFunc(dataToSend) {
-    const url = `http://localhost:30871/backoffice/bs/auth-func`
+    const url = `${baseUrl}/backoffice/bs/auth-func`
 
     const requestOptions = {
       credentials: 'include',
@@ -54,7 +56,7 @@ export class AuthService {
   }
 
   updateAuthAndMenu(dataToSend) {
-    const url = `http://localhost:30871/backoffice/bs/auth-menu`
+    const url = `${baseUrl}/backoffice/bs/auth-menu`
 
     const requestOptions = {
       credentials: 'include',
@@ -72,7 +74,7 @@ export class AuthService {
   }
 
   updateAuthAndFunc(dataToSend) {
-    const url = `http://localhost:30871/backoffice/bs/auth-func`
+    const url = `${baseUrl}/backoffice/bs/auth-func`
 
     const requestOptions = {
       credentials: 'include',

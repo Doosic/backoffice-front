@@ -1,7 +1,9 @@
+import baseUrl from "@/api/defaultPath.js";
+
 export class FuncService {
-  getFuncKeys(params) {
+  getAuthKeys(params) {
     const urlParams = new URLSearchParams(params);
-    const url = `http://localhost:30871/backoffice/bs/func-keys?${urlParams}`
+    const url = `${baseUrl}/backoffice/bs/auth-keys?${urlParams}`
 
     const requestOptions = {
       credentials: 'include',
@@ -18,7 +20,7 @@ export class FuncService {
   }
 
   getAllFunc() {
-    const url = `http://localhost:30871/backoffice/bs/all-func`
+    const url = `${baseUrl}/backoffice/bs/all-auth`
 
     const requestOptions = {
       credentials: 'include',

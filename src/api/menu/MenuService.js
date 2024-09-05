@@ -1,8 +1,11 @@
+import baseUrl from "@/api/defaultPath.js";
+
+
 export class MenuService {
 
   getMenus(params) {
     const urlParams = new URLSearchParams(params);
-    const url = `http://localhost:30871/backoffice/bs/menus`
+    const url = `${baseUrl}/backoffice/bs/menus`
 
     const requestOptions = {
       credentials: 'include',
@@ -20,7 +23,7 @@ export class MenuService {
 
   getMenuKeys(params) {
     const urlParams = new URLSearchParams(params);
-    const url = `http://localhost:30871/backoffice/bs/menu-keys?${urlParams}`
+    const url = `${baseUrl}/backoffice/bs/menu-keys?${urlParams}`
 
     const requestOptions = {
       credentials: 'include',
@@ -37,7 +40,7 @@ export class MenuService {
   }
 
   getAllMenu() {
-    const url = `http://localhost:30871/backoffice/bs/all-menu`
+    const url = `${baseUrl}/backoffice/bs/all-menu`
 
     const requestOptions = {
       credentials: 'include',
@@ -54,7 +57,7 @@ export class MenuService {
   }
 
   getAllFuncAndMenu() {
-    const url = `http://localhost:30871/backoffice/bs/all-func-menu`
+    const url = `${baseUrl}/backoffice/bs/all-auth-menu`
 
     const requestOptions = {
       credentials: 'include',

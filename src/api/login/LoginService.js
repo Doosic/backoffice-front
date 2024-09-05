@@ -1,3 +1,5 @@
+import baseUrl from "@/api/defaultPath.js";
+
 export class LoginService {
 
   isLogin(dataToSend) {
@@ -11,7 +13,7 @@ export class LoginService {
       body: JSON.stringify(dataToSend)
     };
 
-    return fetch('http://localhost:30871/backoffice/login', requestOptions)
+    return fetch(`${baseUrl}/backoffice/login`, requestOptions)
         .then((res) => res.json())
         .then((d) => d);
   }

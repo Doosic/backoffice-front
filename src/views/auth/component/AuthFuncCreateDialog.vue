@@ -15,7 +15,7 @@
 
     <br/>
 
-    <Tree v-model:selectionKeys="selectNode" :value="funcList" @node-select="nodeSelect" selection-mode="checkbox" class="w-full"></Tree>
+    <Tree v-model:selectionKeys="selectNode" :value="authList" @node-select="nodeSelect" selection-mode="checkbox" class="w-full"></Tree>
 
     <template #footer>
       <Button label="Cancel" icon="pi pi-times" text @click="closeDialog"/>
@@ -41,12 +41,12 @@ const props = defineProps({
 const funcService = new FuncService();
 const authService = new AuthService();
 const selectNode = ref({});
-const funcList = ref([]);
+const authList = ref([]);
 const authName = ref('');
 
 onBeforeMount(() => {
   funcService.getAllFunc().then((res) => {
-    funcList.value = res.data;
+    authList.value = res.data;
   })
 })
 
@@ -57,7 +57,7 @@ const createFunc = () => {
 
   const sendData = {
     authName: authName.value,
-    funcKeys: Object.keys(selectNode.value)
+    authKeys: Object.keys(selectNode.value)
   }
 
   authService.createAuthAndFunc(sendData).then((res) => {

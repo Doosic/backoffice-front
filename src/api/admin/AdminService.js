@@ -1,3 +1,5 @@
+import baseUrl from "@/api/defaultPath.js";
+
 export class AdminService {
 
   getUserInfo() {
@@ -9,7 +11,7 @@ export class AdminService {
         'Cache-Control': 'no-cache',
       },
     };
-    return fetch('http://localhost:30871/backoffice/bs/admin/session-info', requestOptions)
+    return fetch(`${baseUrl}/backoffice/bs/admin/session-info`, requestOptions)
         .then((res) => res.json())
         .then((d) => d);
   }
@@ -35,7 +37,7 @@ export class AdminService {
 
   getAdmins(params) {
     const urlParams = new URLSearchParams(params);
-    const url = `http://localhost:30871/backoffice/bs/admins?${urlParams}`
+    const url = `${baseUrl}/backoffice/bs/admins?${urlParams}`
 
     const requestOptions = {
       credentials: 'include',
@@ -52,7 +54,7 @@ export class AdminService {
   }
 
   createAdmin(dataToSend) {
-    const url = `http://localhost:30871/backoffice/bp/admin`
+    const url = `${baseUrl}/backoffice/bs/admin`
 
     const requestOptions = {
       credentials: 'include',
@@ -70,7 +72,7 @@ export class AdminService {
   }
 
   updateAdmin(dataToSend) {
-    const url = `http://localhost:30871/backoffice/bs/admin`
+    const url = `${baseUrl}/backoffice/bs/admin`
 
     const requestOptions = {
       credentials: 'include',
@@ -88,7 +90,7 @@ export class AdminService {
   }
 
   deleteAdmin(dataToSend) {
-    const url = `http://localhost:30871/backoffice/bs/admin`
+    const url = `${baseUrl}/backoffice/bs/admin`
 
     const requestOptions = {
       credentials: 'include',
@@ -106,7 +108,7 @@ export class AdminService {
   }
 
   unlockAdmin(dataToSend) {
-    const url = `http://localhost:30871/backoffice/bs/admin/unlock`
+    const url = `${baseUrl}/backoffice/bs/admin/unlock`
 
     const requestOptions = {
       credentials: 'include',
