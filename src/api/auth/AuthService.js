@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   createAuthAndMenu(dataToSend) {
-    const url = `${baseUrl}/backoffice/bs/auth-menu`
+    const url = `${baseUrl}/backoffice/bs/role-menu`
 
     const requestOptions = {
       credentials: 'include',
@@ -38,7 +38,7 @@ export class AuthService {
   }
 
   createAuthAndFunc(dataToSend) {
-    const url = `${baseUrl}/backoffice/bs/auth-func`
+    const url = `${baseUrl}/backoffice/bs/role-auth`
 
     const requestOptions = {
       credentials: 'include',
@@ -55,8 +55,8 @@ export class AuthService {
         .then((d) => d);
   }
 
-  updateAuthAndMenu(dataToSend) {
-    const url = `${baseUrl}/backoffice/bs/auth-menu`
+  updateRoleMenu(dataToSend) {
+    const url = `${baseUrl}/backoffice/bs/role-menu`
 
     const requestOptions = {
       credentials: 'include',
@@ -73,8 +73,8 @@ export class AuthService {
         .then((d) => d);
   }
 
-  updateAuthAndFunc(dataToSend) {
-    const url = `${baseUrl}/backoffice/bs/auth-func`
+  updateRoleAuth(dataToSend) {
+    const url = `${baseUrl}/backoffice/bs/role-auth`
 
     const requestOptions = {
       credentials: 'include',

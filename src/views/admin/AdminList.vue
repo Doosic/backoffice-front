@@ -11,9 +11,10 @@
         stripedRows
       >
         <template #header>
-          <div class="flex justify-content-between align-items-baseline">
-            <Button style="height: 33px;" type="button" icon="pi pi-user-plus" label="Admin create" outlined @click="createAdminDialog()" />
-            <InputGroup class="col-3">
+          <div class="flex justify-content-between align-items-baseline w-full gap-2">
+            <Button type="button" icon="pi pi-user-plus" label="Admin create" outlined @click="createAdminDialog()" />
+
+            <InputGroup style="width: 350px;">
               <InputGroupAddon>
                 <i class="pi pi-search cursor-pointer" @click="clickSearch"/>
               </InputGroupAddon>
@@ -38,12 +39,6 @@
 
         <template #footer>
           <Paginator v-model:first="first" @Page="onPageClick" :page="3" :page-link-size="5" :rows="pagingInfo.rows" :total-records="pagingInfo.total" :rows-per-page-options="[10, 20, 30]">
-            <template #start>
-              <Button type="button" icon="pi pi-refresh" text @click="onRefresh" />
-            </template>
-            <template #end>
-              <Button type="button" icon="pi pi-download" text @click="downloadExcel" />
-            </template>
           </Paginator>
         </template>
 
@@ -126,40 +121,30 @@ const getContents = () => {
   })
 }
 
-const onRefresh = () => {
-  valueToRouteQuery(setRouterQuery({}));
-}
-
 const downloadExcel = () => {
   console.log('엑셀자료 다운로드');
 }
 
 const onPageClick = (pageInfo) => {
-  valueToRouteQuery(setRouterQuery({
+  valueToRouteQuery({
     page: pageInfo.page + 1,
     rows: pageInfo.rows,
     search: pageInfo.search,
-  }));
+  });
 }
 
 const clickSearch = () => {
-  valueToRouteQuery(setRouterQuery({
+  valueToRouteQuery({
+    page: pagingInfo.value.page,
+    rows: pagingInfo.value.rows,
     search: searchText.value
-  }));
+  });
 }
 
 const valueToRouteQuery = (query) => {
   try{
-    router.push({path: '/admin/list','query': query }).catch((e)=>{});
+    router.push({'query': query }).catch((e)=>{});
   }catch(e){}
-}
-
-const setRouterQuery = ({search="" ,page=1, rows=10}) => {
-  return {
-    search: proxy.$utils.getDefaultArgumentValue(search, route.query.search),
-    page: proxy.$utils.getDefaultArgumentValue(page, route.query.page),
-    rows: proxy.$utils.getDefaultArgumentValue(rows, route.query.rows),
-  }
 }
 
 const createAdminDialog = () => {

@@ -57,7 +57,7 @@ export class MenuService {
   }
 
   getAllFuncAndMenu() {
-    const url = `${baseUrl}/backoffice/bs/all-auth-menu`
+    const url = `${baseUrl}/backoffice/bs/all-role-menu`
 
     const requestOptions = {
       credentials: 'include',

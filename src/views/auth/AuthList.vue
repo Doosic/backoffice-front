@@ -16,13 +16,13 @@
               @row-select="selectedAuth"
           >
             <template #header>
-              <div class="flex justify-content-between align-items-baseline">
-                <InputGroup class="col-8">
-                  <Button class="mr-2 col-4" style="height: 33px;" type="button" icon="pi pi-user-plus" label="Menu create" outlined @click="createMenuDialogOpen" />
-                  <Button class="col-4" style="height: 33px;" type="button" icon="pi pi-user-plus" label="Function create" outlined @click="createFuncDialogOpen"/>
+              <div class="flex-col sm:flex justify-content-between">
+                <InputGroup class="align-items-baseline">
+                  <Button type="button" icon="pi pi-user-plus" label="Menu create" outlined @click="createMenuDialogOpen" />
+                  <Button type="button" icon="pi pi-user-plus" label="Function create" outlined @click="createFuncDialogOpen"/>
                 </InputGroup>
 
-                <InputGroup class="col-4">
+                <InputGroup>
                   <InputGroupAddon>
                     <i class="pi pi-search cursor-pointer" />
                   </InputGroupAddon>
@@ -43,13 +43,7 @@
             <Column field="createDate" header="create-date" style="min-width: 3rem"></Column>
 
             <template #footer>
-              <Paginator v-model:first="first" :page="3" :page-link-size="5" :rows="pagingInfo.rows" :total-records="pagingInfo.total" :rows-per-page-options="[10, 20, 30]">
-                <template #start>
-                  <Button type="button" icon="pi pi-refresh" text />
-                </template>
-                <template #end>
-                  <Button type="button" icon="pi pi-download" text />
-                </template>
+              <Paginator v-model:first="first" @Page="onPageClick" :page="3" :page-link-size="5" :rows="pagingInfo.rows" :total-records="pagingInfo.total" :rows-per-page-options="[10, 20, 30]">
               </Paginator>
             </template>
 
@@ -78,7 +72,7 @@
         </template>
         <template #footer>
           <div class="flex justify-content-end align-items-baseline">
-            <Button class="ml-2" label="Update" rounded @click="updateAuthMenus"></Button>
+            <Button class="ml-2" label="Update" rounded @click="updateRoleMenus"></Button>
           </div>
         </template>
       </Card>
@@ -102,7 +96,7 @@
         </template>
         <template #footer>
           <div class="flex justify-content-end align-items-baseline">
-            <Button class="ml-2" label="Update" rounded @click="updateAuthFuncs"></Button>
+            <Button class="ml-2" label="Update" rounded @click="updateRoleAuth"></Button>
           </div>
         </template>
       </Card>
@@ -136,11 +130,11 @@ import AuthFuncCreateDialog from "@/views/auth/component/AuthFuncCreateDialog.vu
 import { AuthService } from "@/api/auth/AuthService.js";
 import { MenuService } from "@/api/menu/MenuService.js";
 import { FuncService } from "@/api/func/FuncService.js";
-import {useRoute} from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 const route = useRoute();
-import router from "@/router/index.js";
+const router = useRouter();
+
 import { useToast } from "primevue/usetoast";
-import AdminCreateDialog from "@/views/admin/component/AdminCreateDialog.vue";
 const toast = useToast();
 const { proxy } = getCurrentInstance();
 const authService = new AuthService();
@@ -178,6 +172,7 @@ const pagingInfo = ref({
 watch(() => route.query, (newValue, oldValue) =>  {
   getAuths();
 })
+
 watch(() => selectedAuthItem.value, (newValue, oldValue) =>  {
   if(selectedAuthItem.value == null){
     changePreview();
@@ -197,7 +192,6 @@ const nodeSelect = () => {
 }
 
 const selectedAuth = () => {
-  console.log("여기누: ", selectedAuthItem.value);
   selectCardItem.value = selectedAuthItem.value.roleType;
   updateMenuAuthName.value = selectedAuthItem.value.authName;
 
@@ -245,17 +239,17 @@ const changePreview = () => {
   selectedAuthItem.value = {};
 }
 
-const updateAuthMenus = () => {
+const updateRoleMenus = () => {
   if(!updateValidation()){
     return;
   }
 
   const sendData = {
-    authId: selectedAuthItem.value.authId,
+    roleId: selectedAuthItem.value.roleId,
     menuKeys: Object.keys(selectNode.value)
   }
 
-  authService.updateAuthAndMenu(sendData).then((res) => {
+  authService.updateRoleMenu(sendData).then((res) => {
     if(!res.success){
       if(res.statusCode == 'duplicated data'){
         showBottomWarnRight('name이 중복되었습니다.');
@@ -271,17 +265,17 @@ const updateAuthMenus = () => {
   })
 }
 
-const updateAuthFuncs = () => {
+const updateRoleAuth = () => {
   if(!updateValidation()){
     return;
   }
 
   const sendData = {
-    authId: selectedAuthItem.value.authId,
-    funcKeys: Object.keys(selectNode.value)
+    roleId: selectedAuthItem.value.roleId,
+    authKeys: Object.keys(selectNode.value)
   }
 
-  authService.updateAuthAndFunc(sendData).then((res) => {
+  authService.updateRoleAuth(sendData).then((res) => {
     let message = '업데이트가 완료되었습니다.';
 
     if(!res.success){
@@ -331,30 +325,26 @@ const getAuths = () => {
   })
 }
 
-const onRefresh = () => {
-  valueToRouteQuery(setRouterQuery({}));
-}
-
 const onPageClick = (pageInfo) => {
-  valueToRouteQuery(setRouterQuery({
+  valueToRouteQuery({
     page: pageInfo.page + 1,
     rows: pageInfo.rows,
-    search: pageInfo.search,
-  }));
+    search: searchText.value,
+  });
 }
 
 const clickSearch = () => {
-  valueToRouteQuery(setRouterQuery({
+  valueToRouteQuery({
+    page: pagingInfo.value.page,
+    rows: pagingInfo.value.rows,
     search: searchText.value
-  }));
+  });
 }
 
-const setRouterQuery = ({search="" ,page=1, rows=10}) => {
-  return {
-    search: proxy.$utils.getDefaultArgumentValue(search, route.query.search),
-    page: proxy.$utils.getDefaultArgumentValue(page, route.query.page),
-    rows: proxy.$utils.getDefaultArgumentValue(rows, route.query.rows),
-  }
+const valueToRouteQuery = (query) => {
+  try{
+    router.push({'query': query }).catch((e)=>{});
+  }catch(e){}
 }
 
 const createMenuDialogOpen = () => {

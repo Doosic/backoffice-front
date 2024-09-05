@@ -12,6 +12,7 @@ import Column from "primevue/column";
 import Paginator from 'primevue/paginator';
 import Tag from "primevue/tag";
 import Tree from "primevue/tree";
+import Select from 'primevue/select';
 
 export function addComponents(app) {
   app.component('Card', Card);
@@ -28,4 +29,5 @@ export function addComponents(app) {
   app.component('Paginator', Paginator );
   app.component('Toast', Toast);
   app.component('Tree', Tree);
+  app.component('Select', Select);
 }

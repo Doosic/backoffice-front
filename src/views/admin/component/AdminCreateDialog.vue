@@ -79,7 +79,20 @@
           </ul>
         </template>
       </Password>
+    </InputGroup>
 
+    <InputGroup>
+      <InputGroupAddon>
+        <i class="pi pi-envelope"></i>
+      </InputGroupAddon>
+      <InputText type="text" placeholder="Email" v-model.trim="email" />
+    </InputGroup>
+
+    <InputGroup>
+      <InputGroupAddon>
+        <i class="pi pi-envelope"></i>
+      </InputGroupAddon>
+      <InputText type="text" placeholder="Email" v-model.trim="email" />
     </InputGroup>
 
     <template #footer>
